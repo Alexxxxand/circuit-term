@@ -1,1 +1,2 @@
-Simple tool for managing files using rpi pico
+Simple tool for managing files on board
+
