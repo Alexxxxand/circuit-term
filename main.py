@@ -10,6 +10,14 @@ def write_secrets(ssid, password):
         file.write(f"ssid = '{ssid}'\n")
         file.write(f"password = '{password}'\n")
 
+def run_file(filename):
+    try:
+        with open(filename, "r") as file:
+            code = file.read()
+            exec(code)
+    except Exception as e:
+        print("Error:", e)
+
 
 try:
     from secrets import ssid, password
@@ -114,6 +122,7 @@ while True:
             print(f"{ntp.datetime.tm_hour}:0{ntp.datetime.tm_min}")
         else:
             print(f"{ntp.datetime.tm_hour}:{ntp.datetime.tm_min}")
+    
     elif x.startswith("rename"):
         parts = x.split(" ")
         if len(parts) != 3:
@@ -140,9 +149,18 @@ while True:
                 file.write(message)
                 print(f"Message written to {filename}.")
 
+    elif x.startswith("run"):
+        parts = x.split(" ")
+        if len(parts) < 2:
+            print("Usage: run <filename>")
+            continue
+        filename = parts[1]
+        run_file(filename)
+
+
 
     elif x == "help":
-        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\nhelp - this command")
+        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\necho <message> <filename (optional)> - type message in terminal or writ it in file\nrun <filename> - run python file\nhelp - this command")
 
     else:
         print("Invalid command! Type help for list of commands.")
