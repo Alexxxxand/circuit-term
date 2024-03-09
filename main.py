@@ -14,7 +14,11 @@ try:
 except:
     print("Run time-cfg for using time command (only wifi boards)")
 
-wifi.radio.connect(ssid, password)
+
+try:
+    wifi.radio.connect(ssid, password)
+except:
+    pass
 
 while True:
     pool = socketpool.SocketPool(wifi.radio)
@@ -101,7 +105,7 @@ while True:
         ssid = input("Enter WiFi SSID: ")
         password = input("Enter WiFi password: ")
         write_secrets(ssid, password)
-        print("Configuration saved.")
+        print("Configuration saved. Now you need replug your board")
 
     elif x == "time":
         if ntp.datetime.tm_min < 10:
