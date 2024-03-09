@@ -1,20 +1,38 @@
 import os
+import adafruit_ntp
+import socketpool
+import time
+import wifi
+
+def write_secrets(ssid, password):
+    with open("secrets.py", "w") as file:
+        file.write(f"ssid = '{ssid}'\n")
+        file.write(f"password = '{password}'\n")
+
+try:
+    from secrets import ssid, password
+except:
+    print("Run time-cfg for using time command (only wifi boards)")
+
+wifi.radio.connect(ssid, password)
 
 while True:
+    pool = socketpool.SocketPool(wifi.radio)
+    ntp = adafruit_ntp.NTP(pool, tz_offset=2)
     dir = os.getcwd()
     x = input(f"~ [{dir}] > ")
 
-    if x == "ls" or x.startswith("ls "):  # Проверяем, является ли введенная команда "ls" или начинается с "ls "
-        parts = x.split(" ")  # Разделяем строку на части по пробелу
-        if len(parts) > 1:  # Если есть указание директории
-            directory = parts[1]  # Получаем часть строки после "ls "
+    if x == "ls" or x.startswith("ls "):  
+        parts = x.split(" ")  
+        if len(parts) > 1:  
+            directory = parts[1]  
         else:
-            directory = "."  # Если не указана директория, просматриваем текущую
+            directory = "."  
         try:
-            files = os.listdir(directory)  # Получаем список файлов в указанной директории
+            files = os.listdir(directory)  
             for file in files:
                 print(file)
-        except:
+        except FileNotFoundError:
             print("Directory not found.")
 
     elif x.startswith("cd"):
@@ -25,7 +43,7 @@ while True:
         directory = parts[1]  
         try:
             os.chdir(directory)  
-        except:
+        except FileNotFoundError:
             print("Directory not found.")
     
     elif x == "":
@@ -43,8 +61,10 @@ while True:
         try:
             with open(filename, "r") as file:
                 print(file.read())
-        except:
-            print("File does not exist or permission denied.")
+        except FileNotFoundError:
+            print("File not found.")
+        except PermissionError:
+            print("Permission denied.")
 
     elif x.startswith("mkdir"):
         parts = x.split(" ")
@@ -55,7 +75,7 @@ while True:
         try:
             os.mkdir(directory)
             print("Directory created successfully.")
-        except:
+        except FileExistsError:
             print("Directory already exists.")
 
     elif x.startswith("touch"):
@@ -71,8 +91,26 @@ while True:
         except:
             print("Unable to create file.")
 
+    elif x == "fetch":
+        system_info = os.uname()
+        print("   .~~.   .~~.\n  '. \ ' ' / .'\n   .~ .~~~..~.\n  : .~.'~'.~. :\n ~ (   ) (   ) ~\n( : '~'.~.'~' : )\n ~ .~ (   ) ~. ~\n  (  : '~' :  )\n   '~ .~~~. ~'\n       '~'")
+        print("Device:", system_info.machine)
+        print("CircuitPython Version:", system_info.version)
+
+    elif x == "time-cfg":
+        ssid = input("Enter WiFi SSID: ")
+        password = input("Enter WiFi password: ")
+        write_secrets(ssid, password)
+        print("Configuration saved.")
+
+    elif x == "time":
+        if ntp.datetime.tm_min < 10:
+            print(f"{ntp.datetime.tm_hour}:0{ntp.datetime.tm_min}")
+        else:
+            print(f"{ntp.datetime.tm_hour}:{ntp.datetime.tm_min}")
+
     elif x == "help":
-        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nhelp - this command")
+        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nhelp - this command")
 
     else:
         print("Invalid command! Type help for list of commands.")
