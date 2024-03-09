@@ -3,7 +3,6 @@ import adafruit_ntp
 import socketpool
 import time
 import wifi
-import adafruit_requests as requests
 
 def write_secrets(ssid, password):
     with open("secrets.py", "w") as file:
