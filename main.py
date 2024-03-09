@@ -112,9 +112,21 @@ while True:
             print(f"{ntp.datetime.tm_hour}:0{ntp.datetime.tm_min}")
         else:
             print(f"{ntp.datetime.tm_hour}:{ntp.datetime.tm_min}")
+    elif x.startswith("rename"):
+        parts = x.split(" ")
+        if len(parts) != 3:
+            print("Usage: rename <old_name> <new_name>")
+            continue
+        old_name = parts[1]
+        new_name = parts[2]
+        try:
+            os.rename(old_name, new_name)
+            print("File renamed successfully.")
+        except:
+            print("File not found.")
 
     elif x == "help":
-        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nhelp - this command")
+        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\nhelp - this command")
 
     else:
         print("Invalid command! Type help for list of commands.")
