@@ -3,11 +3,13 @@ import adafruit_ntp
 import socketpool
 import time
 import wifi
+import adafruit_requests as requests
 
 def write_secrets(ssid, password):
     with open("secrets.py", "w") as file:
         file.write(f"ssid = '{ssid}'\n")
         file.write(f"password = '{password}'\n")
+
 
 try:
     from secrets import ssid, password
@@ -124,6 +126,20 @@ while True:
             print("File renamed successfully.")
         except:
             print("File not found.")
+
+    elif x.startswith("echo"):
+        parts = x.split(" ", 2)
+        if len(parts) < 2:
+            print("Usage: echo <message> [<filename>]")
+            continue
+        message = parts[1]
+        print(message)
+        if len(parts) == 3:
+            filename = parts[2]
+            with open(filename, "w") as file:
+                file.write(message)
+                print(f"Message written to {filename}.")
+
 
     elif x == "help":
         print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\nhelp - this command")
