@@ -1,13 +1,18 @@
 import os
-import adafruit_ntp
-import socketpool
-import time
-import wifi
 
-def write_secrets(ssid, password):
-    with open("secrets.py", "w") as file:
+try:
+    import wifi
+    import socketpool
+    import adafruit_ntp
+    import time
+    def write_secrets(ssid, password):
+     with open("secrets.py", "w") as file:
         file.write(f"ssid = '{ssid}'\n")
         file.write(f"password = '{password}'\n")
+    wifionboard = True
+except:
+    wifionboard = False
+
 
 def run_file(filename):
     try:
@@ -17,21 +22,22 @@ def run_file(filename):
     except Exception as e:
         print("Error:", e)
 
-
-try:
-    from secrets import ssid, password
-except:
-    print("Run time-cfg for using time command (only wifi boards)")
-
-
-try:
-    wifi.radio.connect(ssid, password)
-except:
+if wifionboard == True:
+    try:
+     from secrets import ssid, password
+    except:
+     print("Run time-cfg for using time command (only wifi boards)")
+else:
     pass
+    
 
 while True:
-    pool = socketpool.SocketPool(wifi.radio)
-    ntp = adafruit_ntp.NTP(pool, tz_offset=2)
+    if wifionboard == True:
+        pool = socketpool.SocketPool(wifi.radio)
+        ntp = adafruit_ntp.NTP(pool, tz_offset=2)
+    else:
+        pass
+
     dir = os.getcwd()
     x = input(f"~ [{dir}] > ")
 
@@ -111,16 +117,22 @@ while True:
         print("CircuitPython Version:", system_info.version)
 
     elif x == "time-cfg":
-        ssid = input("Enter WiFi SSID: ")
-        password = input("Enter WiFi password: ")
-        write_secrets(ssid, password)
-        print("Configuration saved. Now you need replug your board")
+        if wifionboard == True:
+            ssid = input("Enter WiFi SSID: ")
+            password = input("Enter WiFi password: ")
+            write_secrets(ssid, password)
+            print("Configuration saved. Now you need replug your board.")
+        else:
+            print("You dont have wifi on your board for this function.")
 
     elif x == "time":
-        if ntp.datetime.tm_min < 10:
-            print(f"{ntp.datetime.tm_hour}:0{ntp.datetime.tm_min}")
+        if wifionboard == True:
+          if ntp.datetime.tm_min < 10:
+             print(f"{ntp.datetime.tm_hour}:0{ntp.datetime.tm_min}")
+          else:
+             print(f"{ntp.datetime.tm_hour}:{ntp.datetime.tm_min}")
         else:
-            print(f"{ntp.datetime.tm_hour}:{ntp.datetime.tm_min}")
+             print("You dont have wifi on your board for this function.")
     
     elif x.startswith("rename"):
         parts = x.split(" ")
@@ -155,8 +167,6 @@ while True:
             continue
         filename = parts[1]
         run_file(filename)
-
-
 
     elif x == "help":
         print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\necho <message> <filename (optional)> - type message in terminal or writ it in file\nrun <filename> - run python file\nhelp - this command")
