@@ -16,10 +16,11 @@ else:
     pass
 
 
-def write_secrets(ssid, password):
+def write_secrets(ssid, password, timezone):
     with open("secrets.py", "w") as file:
         file.write(f"ssid = '{ssid}'\n")
         file.write(f"password = '{password}'\n")
+        file.write(f"timezone = '{timezone}'\n")
 
 def run_file(filename):
     try:
@@ -128,7 +129,8 @@ while True:
         if wifionboard == True:
           ssid = input("Enter WiFi SSID: ")
           password = input("Enter WiFi password: ")
-          write_secrets(ssid, password)
+          timezone = input("Enter timezone. If your timezone UTC +2, if -2, type -2: ")
+          write_secrets(ssid, password, timezone)
           print("Configuration saved. Now you need replug your board")
         else:
             print("You dont have wifi for this function")
