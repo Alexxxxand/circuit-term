@@ -1,4 +1,4 @@
-Simple tool for managing files on board
+Terminal to work with circuitpython files for circuitpython boards 
 
 tested on:
 rpi pico w
