@@ -38,7 +38,7 @@ class NTP:
         self,
         socketpool,
         *,
-        server: str = "0.adafruit.pool.ntp.org",
+        server: str = "pool.ntp.org",
         port: int = 123,
         tz_offset: float = 0,
         socket_timeout: int = 10,
