@@ -203,7 +203,7 @@ while True:
             print("Directory not found or not empty.")
 
     elif x == "help":
-        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\necho <message> <filename (optional)> - type message in terminal or writ it in file\nrun <filename> - run python file\nmkdir <directory name> - create directory\nrm <filename> - remove file\nrmdir <directory name> - remove direcrory\nhelp - this command")
+        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\necho <message> <filename (optional)> - type message in terminal or write it in file\nrun <filename> - run python file\nmkdir <directory name> - create directory\nrm <filename> - remove file\nrmdir <directory name> - remove direcrory\nhelp - this command")
 
     else:
         print("Invalid command! Type help for list of commands.")
