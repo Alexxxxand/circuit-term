@@ -33,8 +33,10 @@ def run_file(filename):
 try:
     from secrets import ssid, password
 except:
-    print("Run time-cfg for using time command (only wifi boards)")
-
+    if wifionboard == True:
+        print("Run time-cfg for using time command (only wifi boards)")
+    else:
+        pass
 
 try:
     wifi.radio.connect(ssid, password)
