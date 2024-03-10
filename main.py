@@ -91,11 +91,8 @@ while True:
         try:
             with open(filename, "r") as file:
                 print(file.read())
-        except FileNotFoundError:
-            print("File not found.")
-        except PermissionError:
-            print("Permission denied.")
-
+        except:
+            print("File not found or permission denied.")
     elif x.startswith("mkdir"):
         parts = x.split(" ")
         if len(parts) < 2 or parts[1] == '':
