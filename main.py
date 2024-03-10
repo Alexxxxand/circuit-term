@@ -105,7 +105,7 @@ while True:
         try:
             os.mkdir(directory)
             print("Directory created successfully.")
-        except FileExistsError:
+        except:
             print("Directory already exists.")
 
     elif x.startswith("touch"):
@@ -178,9 +178,33 @@ while True:
             continue
         filename = parts[1]
         run_file(filename)
+    
+    elif x.startswith("rm"):
+        parts = x.split(" ")
+        if len(parts) != 2:
+            print("Usage: rm <filename>")
+            continue
+        filename = parts[1]
+        try:
+            os.remove(filename)
+            print("File removed successfully.")
+        except:
+            print("File not found.")
+
+    elif x.startswith("rmdir"):
+        parts = x.split(" ")
+        if len(parts) != 2:
+            print("Usage: rmdir <directory>")
+            continue
+        directory = parts[1]
+        try:
+            os.rmdir(directory)
+            print("Directory removed successfully.")
+        except:
+            print("Directory not found or not empty.")
 
     elif x == "help":
-        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\necho <message> <filename (optional)> - type message in terminal or writ it in file\nrun <filename> - run python file\nhelp - this command")
+        print("List of commands:\nls <directory (optional)> - list of files and directories \ncd <directory> - change directory \npwd - get current path\ncat <filename> - check a file content\nfetch - information about your board\ntime - check what time is now (working only on wifi boards)\ntime-cfg - configure time settings\nrename <file name> <new file name> - rename file\necho <message> <filename (optional)> - type message in terminal or writ it in file\nrun <filename> - run python file\nmkdir <directory name> - create directory\nrm <filename> - remove file\nrmdir <directory name> - remove direcrory\nhelp - this command")
 
     else:
         print("Invalid command! Type help for list of commands.")
